@@ -45,11 +45,16 @@ node .\index.js
 
 1. For viewing overall portfolio details, simply choose option 1 and press Enter.
 
-    ![image](https://user-images.githubusercontent.com/62833911/192138633-831b7bcc-532e-4240-a1bc-1f09ced33d67.png)
+    ![image](https://user-images.githubusercontent.com/62833911/192340787-2b16871a-8669-4237-96c1-bb287e3b5f2b.png)
 2. For viewing portfolio details for a specific token, first choose option 2 and press Enter, and then enter the token and press Enter again.
 
-    ![image](https://user-images.githubusercontent.com/62833911/192138491-e585ee19-e2cf-47a6-a65c-f3f0f57a05ad.png)
+    ![image](https://user-images.githubusercontent.com/62833911/192340902-bf4c4b5e-1dd6-4676-b4e0-73da6d667eaf.png)
 3. For viewing portfolio details on a specific date, first choose option 3 and press Enter, and then enter the date 
 in the mentioned format `e.g. 2010-05-28` and press Enter again.
 
-    ![image](https://user-images.githubusercontent.com/62833911/192138610-4307e7c3-bbee-4f99-9128-900ee66ff879.png)
+    ![image](https://user-images.githubusercontent.com/62833911/192341073-8d271d90-b54a-4d81-8869-dcb2ad6e0e6f.png)
+4. For viewing portfolio details on a specific date for a specific token, first choose option 4 and press Enter, and then enter the date 
+in the mentioned format `e.g. 2010-05-28` and press Enter again, finally enter the token and press Enter one more time.
+
+    ![image](https://user-images.githubusercontent.com/62833911/192341516-9ad4a343-5e1b-4ce1-a8fd-6f59c67f1819.png)
+
