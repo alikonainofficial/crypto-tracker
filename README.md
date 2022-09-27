@@ -65,6 +65,8 @@ git clone <project_url>
 cd <project_name>
 npm install
 ```
+- Download the csv file from [CSV File](https://s3-ap-southeast-1.amazonaws.com/static.propine.com/transactions.csv.zip) and place it in the project folder
+
 - Build and run the project
 ```
 node .\index.js
