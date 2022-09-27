@@ -8,7 +8,7 @@ var csvStream = {};
 const cache = new NodeCache();
 const { CURRENCY } = require("./contants");
 const {
-  getAmountInUSD,
+  getCurrencyRate,
   processData,
   processDataInit,
   isValidDate,
@@ -68,7 +68,7 @@ const displayResults = async (dataSet, token = null, timeStamp = null) => {
   }
   for (var data in dataSet) {
     try {
-      let rate = await getAmountInUSD(data, CURRENCY);
+      let rate = await getCurrencyRate(data, CURRENCY);
       dataSet[data]["convertedValue"] = Number(
         Number(dataSet[data]["value"].toFixed(6)) * rate
       ).toFixed(2);
@@ -88,23 +88,13 @@ const showLatestPortfolio = () => {
 
   let dataSet = {};
 
-  let count = 0;
-  let maxLines = 10000;
-
   fsStream
     .pipe(csvStream)
     .on("data", (data) => {
-      if (count >= maxLines) {
-        fsStream.unpipe(csvStream);
-        csvStream.end();
-        fsStream.destroy();
+      if (dataSet[data["token"]]) {
+        processData(dataSet, data);
       } else {
-        if (dataSet[data["token"]]) {
-          processData(dataSet, data);
-        } else {
-          processDataInit(dataSet, data);
-        }
-        count++;
+        processDataInit(dataSet, data);
       }
     })
     .on("end", () => {
@@ -117,25 +107,15 @@ const showTokenBasedLatestPortfolio = (token) => {
 
   let dataSet = {};
 
-  let count = 0;
-  let maxLines = 10000;
-
   fsStream
     .pipe(csvStream)
     .on("data", (data) => {
-      if (count >= maxLines) {
-        fsStream.unpipe(csvStream);
-        csvStream.end();
-        fsStream.destroy();
-      } else {
-        if (data["token"] == token) {
-          if (dataSet[data["token"]]) {
-            processData(dataSet, data);
-          } else {
-            processDataInit(dataSet, data);
-          }
+      if (data["token"] == token) {
+        if (dataSet[data["token"]]) {
+          processData(dataSet, data);
+        } else {
+          processDataInit(dataSet, data);
         }
-        count++;
       }
     })
     .on("end", () => {
@@ -147,32 +127,22 @@ const showDateBasedPortfolio = (timeStamp) => {
   initStreamConnection();
   let dataSet = {};
 
-  let count = 0;
-  let maxLines = 10000;
-
   let isTimeStampFound = false;
 
   fsStream
     .pipe(csvStream)
     .on("data", (data) => {
-      if (count >= maxLines) {
-        fsStream.unpipe(csvStream);
-        csvStream.end();
-        fsStream.destroy();
-      } else {
-        if (isTimeStampFound) {
-          if (dataSet[data["token"]]) {
-            processData(dataSet, data);
-          }
+      if (isTimeStampFound) {
+        if (dataSet[data["token"]]) {
+          processData(dataSet, data);
         }
-        if (
-          (!isTimeStampFound || !dataSet[data["token"]]) &&
-          data["timestamp"] <= timeStamp
-        ) {
-          isTimeStampFound = true;
-          processDataInit(dataSet, data);
-        }
-        count++;
+      }
+      if (
+        (!isTimeStampFound || !dataSet[data["token"]]) &&
+        data["timestamp"] <= timeStamp
+      ) {
+        isTimeStampFound = true;
+        processDataInit(dataSet, data);
       }
     })
     .on("end", () => {
@@ -185,33 +155,23 @@ const showDateAndTokenBasedPortfolio = (token, timeStamp) => {
 
   let dataSet = {};
 
-  let count = 0;
-  let maxLines = 10000;
-
   let isTimeStampFound = false;
 
   fsStream
     .pipe(csvStream)
     .on("data", (data) => {
-      if (count >= maxLines) {
-        fsStream.unpipe(csvStream);
-        csvStream.end();
-        fsStream.destroy();
-      } else {
-        if (isTimeStampFound && data["token"] == token) {
-          if (dataSet[data["token"]]) {
-            processData(dataSet, data);
-          }
+      if (isTimeStampFound && data["token"] == token) {
+        if (dataSet[data["token"]]) {
+          processData(dataSet, data);
         }
-        if (
-          (!isTimeStampFound || !dataSet[data["token"]]) &&
-          data["timestamp"] <= timeStamp &&
-          data["token"] == token
-        ) {
-          isTimeStampFound = true;
-          processDataInit(dataSet, data);
-        }
-        count++;
+      }
+      if (
+        (!isTimeStampFound || !dataSet[data["token"]]) &&
+        data["timestamp"] <= timeStamp &&
+        data["token"] == token
+      ) {
+        isTimeStampFound = true;
+        processDataInit(dataSet, data);
       }
     })
     .on("end", () => {
@@ -268,15 +228,17 @@ const showInstructions = () => {
     "\n\n******************Welcome to Cypto Tracker!*********************\nPlease choose one of the following options:\n"
   );
 
-  console.log("\n\nPress 1 to show latest portfolio value per token in USD");
   console.log(
-    "Press 2 to show latest portfolio value in USD for your entered token"
+    `\n\nPress 1 to show latest portfolio value per token in ${CURRENCY}`
   );
   console.log(
-    "Press 3 to show portfolio value per token in USD based on your entered date"
+    `Press 2 to show latest portfolio value in ${CURRENCY} for your entered token`
   );
   console.log(
-    "Press 4 to show portfolio value in USD for your entered token on your entered date"
+    `Press 3 to show portfolio value per token in ${CURRENCY} based on your entered date`
+  );
+  console.log(
+    `Press 4 to show portfolio value in ${CURRENCY} for your entered token on your entered date`
   );
   console.log("Press any other key to exit");
 

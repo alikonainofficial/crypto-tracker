@@ -2,7 +2,7 @@ const { default: axios } = require("axios");
 const { API_KEY, CURRENT_DATE_STAMP, EPOCH_START } = require("./contants");
 
 //Get conversion rate for passed token and currency
-module.exports.getAmountInUSD = async (token, currency) => {
+module.exports.getCurrencyRate = async (token, currency) => {
   const url = `https://min-api.cryptocompare.com/data/price?fsym=${token}&tsyms=${currency}`;
 
   const header = {
